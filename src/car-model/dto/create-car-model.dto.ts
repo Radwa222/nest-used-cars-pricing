@@ -1,7 +1,10 @@
-import { IsString, IsNumber } from 'class-validator';
+import { IsString, IsNotEmpty } from 'class-validator';
+import { Types } from 'mongoose';
+
 export class CreateCarModelDto {
   @IsString()
   model: string;
-  @IsNumber()
-  brandId: number;
+
+  @IsNotEmpty()
+  brandId: Types.ObjectId;
 }

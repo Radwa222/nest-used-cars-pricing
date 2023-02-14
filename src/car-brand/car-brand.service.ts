@@ -1,42 +1,46 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { Repository } from 'typeorm';
 import { CreateCarBrandDto } from './dto/create-car-brand.dto';
 import { UpdateCarBrandDto } from './dto/update-car-brand.dto';
-import { CarBrand } from './entities/car-brand.entity';
-import { InjectRepository } from '@nestjs/typeorm';
+import { Model } from 'mongoose';
+import { CarBrandDocument, CarBrand } from './car-brand.schema';
+import { InjectModel } from '@nestjs/mongoose';
 
 @Injectable()
 export class CarBrandService {
-  constructor(@InjectRepository(CarBrand) private repo: Repository<CarBrand>) {}
+  constructor(
+    @InjectModel(CarBrand.name)
+    private readonly model: Model<CarBrandDocument>,
+  ) {}
   async create(createCarBrandDto: CreateCarBrandDto) {
     const isExisting = await this.findByName(createCarBrandDto.name);
     if (isExisting)
       throw new BadRequestException('this car brand is already exists');
-    const brand = this.repo.create(createCarBrandDto);
-    return this.repo.save(brand);
+    const brand = new this.model(createCarBrandDto);
+    return brand.save();
   }
 
   findAll() {
-    return this.repo.findAndCount();
+    return this.model.find().populate('models').exec();
   }
 
-  findOne(id: number) {
-    return this.repo.findOneBy({ id });
+  async findOne(id) {
+    const brand = await this.model.findById({ _id: id }).exec();
+    return brand;
   }
 
-  async update(id: number, { name }: UpdateCarBrandDto) {
+  async update(id: string, { name }: UpdateCarBrandDto) {
     const brand = await this.findOne(id);
     if (!brand) return null;
     brand.name = name;
-    return this.repo.save(brand);
+    return brand.save();
   }
 
-  async remove(id: number) {
+  async remove(id: string) {
     const brand = await this.findOne(id);
     if (!brand) return null;
-    return this.repo.softRemove(brand);
+    return brand.remove();
   }
   findByName(name: string) {
-    return this.repo.findOneBy({ name });
+    return this.model.findOne({ name });
   }
 }

@@ -17,9 +17,4 @@ export class AuthController {
     const user = await this.authService.login(body);
     return user;
   }
-
-  //   @Post('/logout')
-  //   logout(@Session() session: any) {
-  //     session.userId = null;
-  //   }
 }

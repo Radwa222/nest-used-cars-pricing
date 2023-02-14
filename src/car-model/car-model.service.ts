@@ -3,45 +3,46 @@ import {
   NotFoundException,
   Injectable,
 } from '@nestjs/common';
-import { Repository } from 'typeorm';
 import { CreateCarModelDto } from './dto/create-car-model.dto';
 import { UpdateCarModelDto } from './dto/update-car-model.dto';
-import { CarModel } from './entities/car-model.entity';
-import { InjectRepository } from '@nestjs/typeorm';
+import { CarModel, CarModelDocument } from './car-model.schema';
+import { InjectModel } from '@nestjs/mongoose';
 import { CarBrandService } from 'src/car-brand/car-brand.service';
+import { Model } from 'mongoose';
 
 @Injectable()
 export class CarModelService {
   constructor(
-    @InjectRepository(CarModel) private repo: Repository<CarModel>,
+    @InjectModel(CarModel.name)
+    private readonly model: Model<CarModelDocument>,
     private carBrandService: CarBrandService,
   ) {}
   async create(data: CreateCarModelDto) {
     const brand = await this.carBrandService.findOne(data.brandId);
     if (!brand) throw new BadRequestException('not valid brand!');
-    const model = this.repo.create(data);
+    const model = new this.model(data);
     model.brand = brand;
-    return this.repo.save(model);
+    return model.save();
   }
 
   findAll() {
-    return this.repo.findAndCount();
+    return this.model.find().populate('brand').exec();
   }
 
-  findOne(id: number) {
-    return this.repo.findOneBy({ id });
+  findOne(id) {
+    return this.model.findOne({ _id: id });
   }
 
-  async update(id: number, updateCarModelDto: UpdateCarModelDto) {
+  async update(id: string, updateCarModelDto: UpdateCarModelDto) {
     const model = await this.findOne(id);
     if (!model) throw new NotFoundException('no such amodel found');
     model.model = updateCarModelDto.model;
-    return this.repo.save(model);
+    return model.save();
   }
 
-  async remove(id: number) {
+  async remove(id: string) {
     const model = await this.findOne(id);
-    if (!model) throw new NotFoundException('no such amodel found');
-    return this.repo.softRemove(model);
+    if (!model) throw new NotFoundException('no such a model found');
+    return model.remove();
   }
 }

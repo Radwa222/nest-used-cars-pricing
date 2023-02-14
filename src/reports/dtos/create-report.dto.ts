@@ -1,4 +1,13 @@
-import { IsNumber, Min, Max, IsLatitude, IsLongitude } from 'class-validator';
+import {
+  IsNumber,
+  Min,
+  Max,
+  IsLatitude,
+  IsLongitude,
+  IsNotEmpty,
+} from 'class-validator';
+import { Types } from 'mongoose';
+
 export class CreateReportDto {
   @IsNumber()
   @Min(0)
@@ -13,8 +22,8 @@ export class CreateReportDto {
   @IsLongitude()
   long: number;
 
-  @IsNumber()
-  modelId: number;
+  @IsNotEmpty()
+  modelId: Types.ObjectId;
 
   @IsNumber()
   @Min(0)

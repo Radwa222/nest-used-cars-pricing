@@ -16,7 +16,6 @@ export function Serialize(dto: ClassConstructor) {
   return UseInterceptors(new SerializeInterceptor(dto));
 }
 
-// serializize => converts the user entity instance to DTO instance
 export class SerializeInterceptor implements NestInterceptor {
   constructor(private dto: any) {}
   intercept(_context: ExecutionContext, next: CallHandler): Observable<any> {

@@ -21,14 +21,13 @@ import { RolesGuard } from 'src/guards/roles.guard';
 @Controller('reports')
 export class ReportsController {
   constructor(private reportService: ReportsService) {}
-  // @Get()
-  // getEstimate(@Query() query: EstimateReportDTO) {}
 
   @Post()
   @Roles(Role.User)
   @Serialize(ReportDTO)
   @UseGuards(JwtAuthGuard, RolesGuard)
   create(@Body() body: CreateReportDto, @Request() req) {
+    console.log(req.user);
     return this.reportService.create(body, req.user);
   }
 

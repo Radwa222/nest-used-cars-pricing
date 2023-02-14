@@ -1,35 +1,37 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Repository } from 'typeorm';
-import { InjectRepository } from '@nestjs/typeorm';
-import { User } from './user.entity';
+import { User, UserDocument } from './user.schema';
 import { CreateUserDto } from '../auth/dtos/create-user.dto';
+import { Model } from 'mongoose';
+import { InjectModel } from '@nestjs/mongoose';
 
 @Injectable()
 export class UsersService {
-  constructor(@InjectRepository(User) private repo: Repository<User>) {}
+  constructor(
+    @InjectModel(User.name) private readonly model: Model<UserDocument>,
+  ) {}
 
   createUser(user: CreateUserDto) {
-    const $user = this.repo.create(user);
-    return this.repo.save($user);
+    const $user = new this.model(user);
+    return $user.save();
   }
   async findUserById(id: number) {
-    return await this.repo.findOneBy({ id });
+    return await this.model.findById(id);
   }
   async findAllUsers() {
-    return await this.repo.findAndCount();
+    return this.model.find().exec();
   }
   async updateUser(id: number, attrs: Partial<User>) {
     const foundUser = await this.findUserById(id);
     if (!foundUser) throw new NotFoundException('user not found');
     Object.assign(foundUser, attrs);
-    return this.repo.save(foundUser);
+    return foundUser.save();
   }
   async deleteUser(id: number) {
     const foundUser = await this.findUserById(id);
     if (!foundUser) throw new NotFoundException('user not found');
-    return this.repo.remove(foundUser);
+    return this.model.remove(foundUser);
   }
   async findUserByEmail(email: string) {
-    return await this.repo.findOneBy({ email });
+    return await this.model.findOne({ email });
   }
 }

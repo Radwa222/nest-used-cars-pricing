@@ -1,13 +1,17 @@
 import { Module } from '@nestjs/common';
 import { CarBrandService } from './car-brand.service';
 import { CarBrandController } from './car-brand.controller';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { CarBrand } from './entities/car-brand.entity';
+import { CarBrand, CarBrandSchema } from './car-brand.schema';
+import { MongooseModule } from '@nestjs/mongoose';
 
 @Module({
   controllers: [CarBrandController],
   providers: [CarBrandService],
-  imports: [TypeOrmModule.forFeature([CarBrand])],
+  imports: [
+    MongooseModule.forFeature([
+      { name: CarBrand.name, schema: CarBrandSchema },
+    ]),
+  ],
   exports: [CarBrandService],
 })
 export class CarBrandModule {}

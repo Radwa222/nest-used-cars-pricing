@@ -36,7 +36,7 @@ export class CarBrandController {
   @Get(':id')
   @UseGuards(JwtAuthGuard)
   findOne(@Param('id') id: string) {
-    return this.carBrandService.findOne(+id);
+    return this.carBrandService.findOne(id);
   }
 
   @Patch(':id')
@@ -45,13 +45,13 @@ export class CarBrandController {
     @Param('id') id: string,
     @Body() updateCarBrandDto: UpdateCarBrandDto,
   ) {
-    return this.carBrandService.update(+id, updateCarBrandDto);
+    return this.carBrandService.update(id, updateCarBrandDto);
   }
 
   @Delete(':id')
   @Roles(Role.Admin)
   @UseGuards(JwtAuthGuard, RolesGuard)
   remove(@Param('id') id: string) {
-    return this.carBrandService.remove(+id);
+    return this.carBrandService.remove(id);
   }
 }

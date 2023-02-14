@@ -3,15 +3,11 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
 import { ReportsModule } from './reports/reports.module';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { User } from './users/user.entity';
-import { Report } from './reports/reports.entity';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { CarBrandModule } from './car-brand/car-brand.module';
-import { CarBrand } from './car-brand/entities/car-brand.entity';
 import { CarModelModule } from './car-model/car-model.module';
-import { CarModel } from './car-model/entities/car-model.entity';
 import { AuthModule } from './auth/auth.module';
+import { MongooseModule } from '@nestjs/mongoose';
 
 @Module({
   imports: [
@@ -24,19 +20,14 @@ import { AuthModule } from './auth/auth.module';
     CarBrandModule,
     CarModelModule,
     AuthModule,
-    TypeOrmModule.forRootAsync({
+    MongooseModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: async (configService: ConfigService) => ({
+        uri: configService.get<string>('MONGODB_CONNECTION_STRING'),
+      }),
       inject: [ConfigService],
-      useFactory: (config: ConfigService) => {
-        return {
-          type: 'mysql',
-          username: 'radwa',
-          password: 'radwa',
-          database: config.get('DB_NAME'),
-          entities: [User, Report, CarBrand, CarModel],
-          synchronize: true,
-        };
-      },
     }),
+
     CarBrandModule,
     CarModelModule,
     AuthModule,

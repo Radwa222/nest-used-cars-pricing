@@ -3,38 +3,36 @@ import {
   NotFoundException,
   BadRequestException,
 } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
 import { CarModelService } from 'src/car-model/car-model.service';
-import { User } from 'src/users/user.entity';
-import { Repository } from 'typeorm';
+import { UserDocument } from 'src/users/user.schema';
 import { CreateReportDto } from './dtos/create-report.dto';
-import { Report } from './reports.entity';
-
+import { Report, ReporttDocument } from './report.schema';
+import { Model } from 'mongoose';
+import { InjectModel } from '@nestjs/mongoose';
 @Injectable()
 export class ReportsService {
   constructor(
-    @InjectRepository(Report) private repo: Repository<Report>,
+    @InjectModel(Report.name) private readonly model: Model<ReporttDocument>,
     private modelService: CarModelService,
   ) {}
 
-  async create(data: CreateReportDto, user: User) {
-    const model = await this.modelService.findOne(data.modelId);
-    if (!model) throw new BadRequestException('not valid model_id');
-    const report = this.repo.create(data);
+  async create(data: CreateReportDto, user) {
+    const isModel = await this.modelService.findOne(data.modelId);
+    if (!isModel) throw new BadRequestException('not valid model_id');
+    const report = new this.model(data);
     report.user = user;
-    report.model = model;
-    return this.repo.save(report);
+    report.model = isModel;
+    return report.save();
   }
 
   async approve(id: number, approved: boolean) {
-    const report = await this.repo.findOneBy({ id });
+    const report = await this.model.findById(id);
     if (!report) throw new NotFoundException('no such a user found!');
     report.approved = approved;
-    return this.repo.save(report);
+    return report.save();
   }
 
-  async getUserReports(user: User) {
-    const reports = await this.repo.findBy({ user });
-    return reports;
+  async getUserReports(user: UserDocument) {
+    return this.model.find({ user: user._id }).populate('user');
   }
 }

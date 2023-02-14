@@ -1,5 +1,4 @@
 import { Expose, Transform } from 'class-transformer';
-import { CarModel } from 'src/car-model/entities/car-model.entity';
 export class ReportDTO {
   @Expose()
   id: number;
@@ -16,9 +15,6 @@ export class ReportDTO {
   @Expose()
   long: number;
 
-  @Expose()
-  @Transform(({ obj }) => obj.model.id)
-  model_id: CarModel;
   @Expose()
   millage: number;
   @Expose()
