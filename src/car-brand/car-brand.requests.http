@@ -1,0 +1,29 @@
+### create car brand
+
+post http://localhost:3000/car-brands
+Content-Type: application/json
+
+{
+    "name":"toyota"
+}
+
+### find all car-brands
+
+GET  http://localhost:3000/car-brands
+
+### find one car-brand by id
+
+GET  http://localhost:3000/car-brands/1
+
+### update car-brand by id
+
+PATCH   http://localhost:3000/car-brands/1
+Content-Type: application/json
+
+{
+    "name":"toyota2"
+}
+
+### Delete a car brand
+
+DELETE    http://localhost:3000/car-brands/1

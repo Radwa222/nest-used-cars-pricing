@@ -1,0 +1,29 @@
+### create Report
+
+post http://localhost:3000/reports
+Content-Type: application/json
+
+{
+    "year":2000,
+    "modelId":3,
+    "price":80000,
+    "millage":30000,
+    "lat":0,
+    "long":0
+    
+}
+
+### approve/unapproved report 
+
+PATCH http://localhost:3000/reports/1
+Content-Type: application/json
+
+{
+    "approved":false
+}
+
+### GET Estimate Report
+
+Get http://localhost:3000/reports?year=2000&millage=30000&lat=0&long=0&model=corolla&made_by=toyota
+
+

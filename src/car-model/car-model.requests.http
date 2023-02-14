@@ -1,0 +1,28 @@
+### create car model
+
+post http://localhost:3000/car-models
+Content-Type: application/json
+
+{
+    "model":"corolla",
+    "brandId":1
+}
+
+### List All models
+get http://localhost:3000/car-models
+
+### get model by id
+get http://localhost:3000/car-models/1
+
+### update model by id
+PATCH  http://localhost:3000/car-models/1
+Content-Type: application/json
+
+{
+    "model":"corolla"
+}
+### delete model by id
+
+DELETE   http://localhost:3000/car-models/1
+
+

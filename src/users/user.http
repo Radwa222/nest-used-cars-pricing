@@ -1,0 +1,37 @@
+### whoiam
+get http://localhost:3000/auth/whoami
+
+### signup
+post http://localhost:3000/auth/signup
+Content-type: application/json
+
+{
+    "email":"foo@gmail.com",
+    "password":"123",
+    "frist_name":"doo",
+    "last_name":"dooo"
+}
+
+
+
+### find user by id
+
+get http://localhost:3000/auth/2
+
+
+### find all users
+get http://localhost:3000/auth
+
+### update user
+patch http://localhost:3000/auth/?id=1
+Content-type: application/json
+
+{
+       "email":"radwa2211@gmail.com",
+       "frist_name":"koki"
+
+ 
+}
+### logout
+
+post http://localhost:3000/auth/logout
