@@ -8,6 +8,8 @@ import { CarBrandModule } from './car-brand/car-brand.module';
 import { CarModelModule } from './car-model/car-model.module';
 import { AuthModule } from './auth/auth.module';
 import { MongooseModule } from '@nestjs/mongoose';
+import { APP_GUARD } from '@nestjs/core';
+import { JwtAuthGuard } from './common/guards';
 
 @Module({
   imports: [
@@ -33,6 +35,12 @@ import { MongooseModule } from '@nestjs/mongoose';
     AuthModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: APP_GUARD,
+      useClass: JwtAuthGuard,
+    },
+  ],
 })
 export class AppModule {}
