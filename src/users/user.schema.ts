@@ -7,20 +7,23 @@ export type UserDocument = HydratedDocument<User>;
 
 @Schema()
 export class User {
-  @Prop()
+  @Prop({ required: true, unique: true })
   email: string;
 
-  @Prop()
+  @Prop({ required: true })
   password: string;
 
-  @Prop()
+  @Prop({ required: true })
   frist_name: string;
 
-  @Prop()
+  @Prop({ required: true })
   last_name: string;
 
   @Prop({ type: [{ type: Types.ObjectId, ref: 'Report' }] })
   reports: Report[];
+
+  @Prop({ default: null })
+  refresh_token: string;
 
   @Prop({
     type: String,

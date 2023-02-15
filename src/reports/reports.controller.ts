@@ -27,7 +27,6 @@ export class ReportsController {
   @Serialize(ReportDTO)
   @UseGuards(JwtAuthGuard, RolesGuard)
   create(@Body() body: CreateReportDto, @Request() req) {
-    console.log(req.user);
     return this.reportService.create(body, req.user);
   }
 

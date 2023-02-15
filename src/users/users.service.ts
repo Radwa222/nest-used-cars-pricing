@@ -10,17 +10,17 @@ export class UsersService {
     @InjectModel(User.name) private readonly model: Model<UserDocument>,
   ) {}
 
-  createUser(user: CreateUserDto) {
+  createUser(user: CreateUserDto): Promise<UserDocument> {
     const $user = new this.model(user);
     return $user.save();
   }
-  async findUserById(id: number) {
-    return await this.model.findById(id);
+  async findUserById(id) {
+    return await this.model.findOne({ _id: id });
   }
   async findAllUsers() {
     return this.model.find().exec();
   }
-  async updateUser(id: number, attrs: Partial<User>) {
+  async update(id, attrs: Partial<User>) {
     const foundUser = await this.findUserById(id);
     if (!foundUser) throw new NotFoundException('user not found');
     Object.assign(foundUser, attrs);
@@ -31,7 +31,7 @@ export class UsersService {
     if (!foundUser) throw new NotFoundException('user not found');
     return this.model.remove(foundUser);
   }
-  async findUserByEmail(email: string) {
+  async findUserByEmail(email: string): Promise<UserDocument> {
     return await this.model.findOne({ email });
   }
 }
