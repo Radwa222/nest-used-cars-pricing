@@ -29,8 +29,10 @@ export class CarModelService {
     return this.model.find().populate('brand').exec();
   }
 
-  findOne(id) {
-    return this.model.findOne({ _id: id });
+  async findOne(id) {
+    const model = await this.model.findOne({ _id: id });
+    if (!model) throw new BadRequestException('no suach a car brand');
+    return model;
   }
 
   async update(id: string, updateCarModelDto: UpdateCarModelDto) {

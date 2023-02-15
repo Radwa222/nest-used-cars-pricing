@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateCarBrandDto } from './dto/create-car-brand.dto';
 import { UpdateCarBrandDto } from './dto/update-car-brand.dto';
 import { Model } from 'mongoose';
@@ -25,6 +29,7 @@ export class CarBrandService {
 
   async findOne(id) {
     const brand = await this.model.findById({ _id: id }).exec();
+    if (!brand) throw new BadRequestException('no suach a car brand');
     return brand;
   }
 

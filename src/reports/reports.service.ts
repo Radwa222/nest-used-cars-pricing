@@ -25,9 +25,9 @@ export class ReportsService {
     return report.save();
   }
 
-  async approve(id: number, approved: boolean) {
-    const report = await this.model.findById(id);
-    if (!report) throw new NotFoundException('no such a user found!');
+  async approve(id: any, approved: boolean) {
+    const report = await this.model.findOne({ _id: id });
+    if (!report) throw new NotFoundException('no such a report found!');
     report.approved = approved;
     return report.save();
   }

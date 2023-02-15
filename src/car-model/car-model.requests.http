@@ -1,6 +1,6 @@
 ### create car model
 
-post http://localhost:3000/car-models
+post http://localhost:3002/car-models
 Content-Type: application/json
 
 {
@@ -9,13 +9,13 @@ Content-Type: application/json
 }
 
 ### List All models
-get http://localhost:3000/car-models
+get http://localhost:3002/car-models
 
 ### get model by id
-get http://localhost:3000/car-models/1
+get http://localhost:3002/car-models/1
 
 ### update model by id
-PATCH  http://localhost:3000/car-models/1
+PATCH  http://localhost:3002/car-models/1
 Content-Type: application/json
 
 {
@@ -23,6 +23,6 @@ Content-Type: application/json
 }
 ### delete model by id
 
-DELETE   http://localhost:3000/car-models/1
+DELETE   http://localhost:3002/car-models/1
 
 

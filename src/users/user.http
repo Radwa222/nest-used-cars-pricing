@@ -1,8 +1,8 @@
 ### whoiam
-get http://localhost:3000/auth/whoami
+get http://localhost:3002/auth/whoami
 
 ### signup
-post http://localhost:3000/auth/signup
+post http://localhost:3002/auth/signup
 Content-type: application/json
 
 {
@@ -16,14 +16,14 @@ Content-type: application/json
 
 ### find user by id
 
-get http://localhost:3000/auth/2
+get http://localhost:3002/auth/2
 
 
 ### find all users
-get http://localhost:3000/auth
+get http://localhost:3002/auth
 
 ### update user
-patch http://localhost:3000/auth/?id=1
+patch http://localhost:3002/auth/?id=1
 Content-type: application/json
 
 {
@@ -34,4 +34,4 @@ Content-type: application/json
 }
 ### logout
 
-post http://localhost:3000/auth/logout
+post http://localhost:3002/auth/logout

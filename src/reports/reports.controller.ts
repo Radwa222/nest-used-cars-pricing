@@ -27,7 +27,7 @@ export class ReportsController {
   @Patch('approve/:id')
   @Serialize(ReportDTO)
   approve(@Param('id') id: string, @Body() body: ApproveReportDTO) {
-    return this.reportService.approve(+id, body.approved);
+    return this.reportService.approve(id, body.approved);
   }
 
   @Get('/user')
