@@ -34,4 +34,7 @@ export class UsersService {
   async findUserByEmail(email: string): Promise<UserDocument> {
     return await this.model.findOne({ email });
   }
+  async findUserByPhone(phone: string): Promise<UserDocument> {
+    return await this.model.findOne({ phone });
+  }
 }

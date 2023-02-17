@@ -25,9 +25,16 @@ export class AuthService {
   ) {}
 
   async singup(body: CreateUserDto): Promise<Tokens> {
-    // validate user existance
-    const isUserExists = await this.usersService.findUserByEmail(body.email);
-    if (isUserExists) throw new BadRequestException('email already exists');
+    // validate mail
+    const isUniqueMail = await this.usersService.findUserByEmail(body.email);
+    if (isUniqueMail) throw new BadRequestException('email already exists');
+
+    // validate mobile number
+    const isUniquePhone = await this.usersService.findUserByPhone(
+      body.mobile_number,
+    );
+    if (isUniquePhone)
+      throw new BadRequestException('mobile number already exists');
 
     //hasing and salting password
     const salt = randomBytes(16).toString('hex');
