@@ -55,6 +55,11 @@ export class AuthService {
 
     return tokens;
   }
+
+  async logout(userId: string) {
+    return this.usersService.update(userId, { refresh_token: null });
+  }
+
   async refresh(userId: any, refresh_token: string): Promise<Tokens> {
     const user = await this.usersService.findUserById(userId);
     if (!user || !user.refresh_token) throw new ForbiddenException();
@@ -64,10 +69,6 @@ export class AuthService {
     await this.updateRefreshToken(user._id, tokens.refresh_token);
 
     return tokens;
-  }
-
-  async logout(userId: string) {
-    return this.usersService.update(userId, { refresh_token: null });
   }
 
   async getTokens(userId: any, email: string): Promise<Tokens> {

@@ -9,4 +9,6 @@ export class UserDto {
   frist_name: string;
   @Expose()
   last_name: string;
+  @Expose()
+  mobile_number: number;
 }

@@ -23,6 +23,9 @@ export class User {
 
   @Prop({ default: null })
   refresh_token: string;
+
+  @Prop({ required: true, unique: true })
+  mobile_number: string;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
