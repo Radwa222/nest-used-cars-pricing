@@ -10,7 +10,9 @@ import { AuthModule } from './auth/auth.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './common/guards';
-
+import { ResetPasswordsModule } from './reset-passwords/reset-passwords.module';
+import { TwilioModule } from 'nestjs-twilio';
+import { SmsModule } from './sms/sms.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -33,6 +35,12 @@ import { JwtAuthGuard } from './common/guards';
     CarBrandModule,
     CarModelModule,
     AuthModule,
+    ResetPasswordsModule,
+    // TwilioModule.forRoot({
+    //   accountSid: process.env.TWILIO_ACCOUNT_SID,
+    //   authToken: process.env.TWILIO_AUTH_TOKEN,
+    // }),
+    SmsModule,
   ],
   controllers: [AppController],
   providers: [

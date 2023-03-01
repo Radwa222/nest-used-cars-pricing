@@ -4,8 +4,6 @@ import {
   UnauthorizedException,
   ForbiddenException,
 } from '@nestjs/common';
-import { scrypt as _scrypt, randomBytes } from 'crypto';
-import { promisify } from 'util';
 import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import { CreateUserDto } from './dtos/create-user.dto';
@@ -13,8 +11,6 @@ import { SignInDto } from './dtos/singin-user.dto';
 import { ConfigService } from '@nestjs/config';
 import { Tokens } from './types';
 import * as bcrypt from 'bcrypt';
-
-const scrypt = promisify(_scrypt);
 
 @Injectable()
 export class AuthService {
@@ -37,12 +33,11 @@ export class AuthService {
       throw new BadRequestException('mobile number already exists');
 
     //hasing and salting password
-    const salt = randomBytes(16).toString('hex');
-    const hashed = (await scrypt(body.password, salt, 32)) as Buffer;
+    const hashed = await this.usersService.hashPassword(body.password);
 
     const user = await this.usersService.createUser({
       ...body,
-      password: `${salt}-${hashed.toString('hex')}`,
+      password: hashed,
     });
     const tokens = await this.getTokens(user._id, user.email);
     await this.updateRefreshToken(user._id, tokens.refresh_token);
@@ -53,10 +48,9 @@ export class AuthService {
   async login(body: SignInDto): Promise<Tokens> {
     const user = await this.usersService.findUserByEmail(body.email);
     if (!user) throw new UnauthorizedException('invalid credentials');
-    const [salt, storedHash] = user.password.split('-');
-    const hashed = (await scrypt(body.password, salt, 32)) as Buffer;
-    if (hashed.toString('hex') !== storedHash)
-      throw new UnauthorizedException('invalid credentials');
+
+    const isValidPass = await bcrypt.compare(body.password, user.password);
+    if (!isValidPass) throw new UnauthorizedException('invalid credentials');
     const tokens = await this.getTokens(user._id, user.email);
     await this.updateRefreshToken(user._id, tokens.refresh_token);
 
