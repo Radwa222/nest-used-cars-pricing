@@ -43,6 +43,11 @@ export class UsersService {
     return user.save();
   }
 
+  async verifyMobileNumber(user: UserDocument) {
+    user.is_mobile_verified = true;
+    return user.save();
+  }
+
   async hashPassword(pass: string) {
     return await bcrypt.hash(pass, 10);
   }

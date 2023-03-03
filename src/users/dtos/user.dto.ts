@@ -11,4 +11,6 @@ export class UserDto {
   last_name: string;
   @Expose()
   mobile_number: number;
+  @Expose()
+  is_mobile_verified: boolean;
 }

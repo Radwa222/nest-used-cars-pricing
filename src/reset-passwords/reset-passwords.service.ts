@@ -1,5 +1,5 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { OTPHelper } from 'src/common/helpers/otp.helper';
+import { OtpService } from 'src/common/helpers/otp/otp-helper.service';
 import { UsersService } from '../users/users.service';
 import { ResetPasswordRequestDTO } from './dtos/reset-password-request.dto';
 import { VerifyOtpDTO } from './dtos/verify-otp.dto';
@@ -12,7 +12,7 @@ import { SmsService } from '../sms/sms.service';
 export class ResetPasswordsService {
   constructor(
     private userService: UsersService,
-    private otpHelper: OTPHelper,
+    private otp: OtpService,
     private JWT: JwtService,
     private sms: SmsService,
   ) {}
@@ -21,8 +21,9 @@ export class ResetPasswordsService {
   async sendResetPasswordRequest({ mobile_number }: ResetPasswordRequestDTO) {
     const user = await this.userService.findUserByPhone(mobile_number);
     if (!user) throw new BadRequestException('no such a user found!');
+
     // Generate OTP
-    const otp = await this.otpHelper.generateOTP(6, user.mobile_number);
+    const otp = await this.otp.resetPasswordOTP(6, user.mobile_number);
     await this.sms.sendSMS(
       user.mobile_number,
       `الكود التعريفي الخاص بك هو ${otp}`,
@@ -32,7 +33,7 @@ export class ResetPasswordsService {
 
   // verify reset OTP API
   async verifyOTP(body: VerifyOtpDTO): Promise<object> {
-    const stored = await this.otpHelper.getOTP(body.mobile_number);
+    const stored = await this.otp.getResetPasswordOTP(body.mobile_number);
     if (!stored) throw new BadRequestException('invalid otp');
     if (stored != body.otp) throw new BadRequestException('invalid otp');
     const reset_token = this.JWT.sign(

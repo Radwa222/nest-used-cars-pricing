@@ -26,6 +26,9 @@ export class User {
 
   @Prop({ required: true, unique: true })
   mobile_number: string;
+
+  @Prop({ default: false })
+  is_mobile_verified: boolean;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

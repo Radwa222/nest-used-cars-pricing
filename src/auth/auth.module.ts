@@ -6,10 +6,24 @@ import { JwtModule } from '@nestjs/jwt';
 import { JwtStrategy } from './strategies';
 import { AuthController } from './auth.controller';
 import { RefreshTokenStrategy } from './strategies';
+import { MobileVerificationService } from './mobile-verification.service';
+import { SmsModule } from 'src/sms/sms.module';
+import { OTPHelperModule } from 'src/common/helpers/otp/otp-helper.module';
 
 @Module({
-  imports: [UsersModule, PassportModule, JwtModule.register({})],
-  providers: [AuthService, JwtStrategy, RefreshTokenStrategy],
+  imports: [
+    UsersModule,
+    PassportModule,
+    JwtModule.register({}),
+    SmsModule,
+    OTPHelperModule,
+  ],
+  providers: [
+    AuthService,
+    JwtStrategy,
+    RefreshTokenStrategy,
+    MobileVerificationService,
+  ],
   controllers: [AuthController],
 })
 export class AuthModule {}
